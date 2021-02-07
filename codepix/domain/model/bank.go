@@ -8,10 +8,10 @@ import (
 )
 
 type Bank struct {
-	Base	  `valid:"required"`
-	Code      string    `json:"code" valid:"notnull"`
-	Name      string    `json:"name" valid:"notnull"`
-	Accounts  []*Account `valid:"-"`
+	Base     `valid:"required"`
+	Code     string     `json:"code" valid:"notnull"`
+	Name     string     `json:"name" valid:"notnull"`
+	Accounts []*Account `valid:"-"`
 }
 
 func (bank *Bank) IsValid() error {
@@ -23,7 +23,7 @@ func (bank *Bank) IsValid() error {
 }
 
 func NewBank(code string, name string) (*Bank, error) {
-	bank := Bank {
+	bank := Bank{
 		Code: code,
 		Name: name,
 	}
@@ -33,7 +33,7 @@ func NewBank(code string, name string) (*Bank, error) {
 	err := bank.IsValid()
 
 	if err != nil {
-		return nil err
+		return nil, err
 	}
 
 	return &bank, nil

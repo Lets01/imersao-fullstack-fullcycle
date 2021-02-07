@@ -2,22 +2,24 @@ package model
 
 import (
 	"errors"
+	"time"
 
 	"github.com/asaskevich/govalidator"
+	uuid "github.com/satori/go.uuid"
 )
 
 type PixKey struct {
 	Base      `valid:"required"`
 	Kind      string   `json:"kind" valid:"notnull"`
-	key       string   `json:"key" valid:"notnull"`
-	AccountId string   `json:"accountId" valid:"notnull"`
+	Key       string   `json:"key" valid:"notnull"`
+	AccountID string   `json:"account_id" valid:"notnull"`
 	Account   *Account `valid:"-"`
-	Status    string   `json:"name" valid:"notnull"`
+	Status    string   `json:"status" valid:"notnull"`
 }
 
 type PixKeyRepositoryInterface interface {
-	RegisterKey(pixKey *PixKey)(*PixKey, error)
-	FindKeyByKind(key string, kind string)(*PixKey, error)
+	RegisterKey(pixKey *PixKey) (*PixKey, error)
+	FindKeyByKind(key string, kind string) (*PixKey, error)
 	AddBank(bank *Bank) error
 	AddAccount(account *Account) error
 	FindAccount(id string) (*Account, error)
@@ -41,11 +43,11 @@ func (pixKey *PixKey) IsValid() error {
 }
 
 func NewPixKey(kind string, account *Account, key string) (*PixKey, error) {
-	pixKey := PixKey {
-		Kind: kind,
+	pixKey := PixKey{
+		Kind:    kind,
 		Account: account,
-		Key: key,
-		Status: "active",
+		Key:     key,
+		Status:  "active",
 	}
 	pixKey.ID = uuid.NewV4().String()
 	pixKey.CreatedAt = time.Now()
@@ -53,8 +55,8 @@ func NewPixKey(kind string, account *Account, key string) (*PixKey, error) {
 	err := account.IsValid()
 
 	if err != nil {
-		return nil err
+		return nil, err
 	}
 
-	return &account, nil
+	return &pixKey, nil
 }

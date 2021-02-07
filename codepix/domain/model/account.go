@@ -2,15 +2,16 @@ package model
 
 import (
 	"time"
+
 	"github.com/asaskevich/govalidator"
 	uuid "github.com/satori/go.uuid"
 )
 
 type Account struct {
 	Base      `valid:"required"`
-	OwnerName string `json:"ownerName" valid:"notnull"`
-	Bank      *Bank  `valid:"-"`
-	Number    string `json:"number" valid:"notnull"`
+	OwnerName string    `json:"owner_name" valid:"notnull"`
+	Bank      *Bank     `valid:"-"`
+	Number    string    `json:"number" valid:"notnull"`
 	PixKeys   []*PixKey `valid:"-"`
 }
 
@@ -23,10 +24,10 @@ func (account *Account) IsValid() error {
 }
 
 func NewAccount(bank *Bank, number string, ownerName string) (*Account, error) {
-	account := Account {
+	account := Account{
 		OwnerName: ownerName,
-		Bank: bank,
-		Number: number,
+		Bank:      bank,
+		Number:    number,
 	}
 	account.ID = uuid.NewV4().String()
 	account.CreatedAt = time.Now()
@@ -34,7 +35,7 @@ func NewAccount(bank *Bank, number string, ownerName string) (*Account, error) {
 	err := account.IsValid()
 
 	if err != nil {
-		return nil err
+		return nil, err
 	}
 
 	return &account, nil
